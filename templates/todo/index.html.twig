@@ -8,9 +8,9 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'id', 'order' : order}) }}">ID</a></th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'name', 'order' : order}) }}">Name</a></th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'description', 'order' : order}) }}">Description</a></th>
                 <th>actions</th>
             </tr>
         </thead>

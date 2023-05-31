@@ -19,7 +19,10 @@ class Todo
     #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
-    public function getId(): ?int
+    #[ORM\Column(nullable: true)]
+    private ?bool $status = null;
+
+     public function getId(): ?int
     {
         return $this->id;
     }
@@ -44,6 +47,18 @@ class Todo
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
