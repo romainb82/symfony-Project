@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ContactController!{% endblock %}
+
+{% block body %}
+
+{{ dump() }}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="envoyer" />
+{{ form_end(form) }}
+{% endblock %}

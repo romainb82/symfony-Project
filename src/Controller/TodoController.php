@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
+use App\Form\TodoFilterType;
 use App\Form\TodoType;
 use App\Repository\TodoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,21 +14,40 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/todo')]
 class TodoController extends AbstractController
 {
-    #[Route('/', name: 'app_todo_index', methods: ['GET'])]
+    #[Route('/', name: 'app_todo_index', methods: ['GET', 'POST'])]
     public function index(Request $request, TodoRepository $todoRepository): Response
     {
-        $order = $request->query->get('order');
-        $orderBy = $request->query->get('orderby');
+        $form = $this->createForm(TodoFilterType::class);
+        $form->handleRequest($request);
 
+        //Filtre le status
+        if ($form->isSubmitted() && $form->isValid()) {
+            $check = $form->get('status')->getData();
+            //dump($check);
+            $critere = [];
+            if($check){
+                $critere = ["status" => $check];
+            }
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findBy($critere, []),
+                'form' => $form->createView()
+            ]);
+        } 
+
+        //Filtre le chaque champs quand on clique dessus
+        $order = $request->query->get('order') == 'ASC' ? 'DESC' : 'ASC';
+        $orderBy = $request->query->get('orderby');
         if(isset($order) && isset($orderBy)){
             $criteria = [$orderBy => $order];
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findBy([], $criteria),
-                'order' => $order == 'ASC' ? 'DESC': 'ASC'
+                'order' => $order,
+                'form' => $form->createView()
             ]);
         } else {
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findAll(),
+                'form' => $form->createView()
             ]);
         }
         

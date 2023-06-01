@@ -8,22 +8,40 @@
     <table class="table">
         <thead>
             <tr>
-                <th><a href="{{ url('app_todo_index', {'orderby': 'id', 'order' : order}) }}">ID</a></th>
-                <th><a href="{{ url('app_todo_index', {'orderby': 'name', 'order' : order}) }}">Name</a></th>
-                <th><a href="{{ url('app_todo_index', {'orderby': 'description', 'order' : order}) }}">Description</a></th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'id', 'order' : 'ASC'}) }}">ID</a></th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'name', 'order' : 'ASC'}) }}">Name</a></th>
+                <th><a href="{{ url('app_todo_index', {'orderby': 'description', 'order' : 'ASC'}) }}">Description</a></th>
+                <th>Status</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="go"/>
+            {{ form_end(form) }}
         {% for todo in todos %}
+
             <tr>
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
+
+                {% if todo.status == 1 %}
+                    <td>Fait<td>
+                                    
+                <td>
+                    <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>
+                </td> 
+                {% else %}
+                    <td>A Faire<td>
+                                    
                 <td>
                     <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>
                     <a href="{{ path('app_todo_edit', {'id': todo.id}) }}">edit</a>
-                </td>
+                </td> 
+                {% endif %}
+           
             </tr>
         {% else %}
             <tr>
