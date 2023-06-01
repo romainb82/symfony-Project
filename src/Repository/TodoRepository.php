@@ -63,4 +63,15 @@ class TodoRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function search($value){
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.name LIKE :recherche')
+            ->setParameters([
+                'recherche' => '%' . ($value ?? '') . '%',
+            ])
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

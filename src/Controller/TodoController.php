@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Todo;
 use App\Form\TodoFilterType;
+use App\Form\TodoSearchType;
 use App\Form\TodoType;
 use App\Repository\TodoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,19 +21,40 @@ class TodoController extends AbstractController
         $form = $this->createForm(TodoFilterType::class);
         $form->handleRequest($request);
 
+        $formResearch = $this->createForm(TodoSearchType::class);
+        $formResearch->handleRequest($request);
+
         //Filtre le status
         if ($form->isSubmitted() && $form->isValid()) {
             $check = $form->get('status')->getData();
-            //dump($check);
+            
             $critere = [];
             if($check){
                 $critere = ["status" => $check];
             }
+
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findBy($critere, []),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formResearch' => $formResearch->createView()
             ]);
-        } 
+        }
+
+        if ($formResearch->isSubmitted() && $formResearch->isValid()) {
+           
+            $recherche = $formResearch->get('recherche')->getData();
+
+            $critere = [];
+            if(isset($recherche)){
+                $search = $todoRepository->search($recherche);
+            }
+
+            return $this->render('todo/index.html.twig', [
+                'todos' => $search,
+                'form' => $form->createView(),
+                'formResearch' => $formResearch->createView()
+            ]);
+        }
 
         //Filtre le chaque champs quand on clique dessus
         $order = $request->query->get('order') == 'ASC' ? 'DESC' : 'ASC';
@@ -42,12 +64,14 @@ class TodoController extends AbstractController
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findBy([], $criteria),
                 'order' => $order,
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formResearch' => $formResearch->createView()
             ]);
         } else {
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findAll(),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formResearch' => $formResearch->createView()
             ]);
         }
         

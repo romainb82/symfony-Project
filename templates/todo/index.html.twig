@@ -20,6 +20,13 @@
                 {{ form_widget(form) }}
                 <input type="submit" value="go"/>
             {{ form_end(form) }}
+
+            {{ form_start(formResearch) }}
+                {{ form_widget(formResearch) }}
+                <input type="submit" value="Rechercher"/>
+            {{ form_end(formResearch) }}
+
+
         {% for todo in todos %}
 
             <tr>
