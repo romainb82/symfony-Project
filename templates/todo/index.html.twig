@@ -10,6 +10,7 @@
                 <th><a href="{{ url('app_todo_index', {'orderby': 'id', 'order' : 'ASC'}) }}">ID</a></th>
                 <th><a href="{{ url('app_todo_index', {'orderby': 'name', 'order' : 'ASC'}) }}">Name</a></th>
                 <th><a href="{{ url('app_todo_index', {'orderby': 'description', 'order' : 'ASC'}) }}">Description</a></th>
+                <th>Utilisateur</th>
                 <th>Priority</th>
                 <th>Status</th>
                 <th>actions</th>
@@ -33,6 +34,9 @@
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
+                {% if todo.user.name is defined %}
+                    <td>{{ todo.user.name }}</td>
+                {% endif %}
                 <td>{{ todo.priority.name }}</td>
 
                 {% if todo.status == 1 %}
